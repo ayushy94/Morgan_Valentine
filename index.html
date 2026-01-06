@@ -192,24 +192,7 @@ function render(){
   overlay.appendChild(main);
 
   // Background mode
-  main.appendChild(h("div", {class:"card"}, [
-    h("div", {class:"row"}, [
-      h("span", {class:"small"}, "Background style:"),
-      h("button", {class:"btn "+(bgMode==="text"?"":"secondary"), onclick:()=>{bgMode="text"; render();}}, "Inside‑joke text"),
-      h("button", {class:"btn "+(bgMode==="photo"?"":"secondary"), onclick:()=>{bgMode="photo"; render();}}, "Photo background"),
-      bgMode==="photo" ? h("input", {
-        placeholder:"Paste a photo URL",
-        style:{flex:"1",padding:".5rem .75rem",border:"1px solid #e5e7eb",borderRadius:"999px"},
-        value:photoUrl||"",
-        oninput:(e)=>{photoUrl=e.target.value}
-      }) : null
-    ]),
-    bgMode==="text" ? h("div", {class:"bg-text-grid", style:{marginTop:".5rem"}},
-      Array.from({length:9}).map(()=>h("div", {style:{opacity:.7}},
-        "That’s my baby she’s iconic · Stomach growling but can’t decide what to eat · That’s ironic"
-      ))
-    ) : null
-  ]));
+
 
   // Activity timing
   main.appendChild(h("div", {class:"card"}, [
