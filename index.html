@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,61 +6,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Morgan ❤️</title>
 
-<style>
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-  background: url('morgan.jpg') center/cover no-repeat fixed;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.overlay {
-  background: rgba(255,245,248,0.96);
-  border-radius: 24px;
-  padding: 36px 30px;
-  max-width: 520px;
-  width: 92%;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-}
-
-h1 {
-  text-align: center;
-  font-size: 2.2rem;
-}
-
-.poem {
-  text-align: center;
-  font-style: italic;
-  margin: 18px 0 28px;
-}
-
-.section {
-  margin-top: 24px;
-}
-
-.options {
-  display: grid;
-  gap: 12px;
-}
-
-.option {
-  border: 2px solid #f2caca;
-  border-radius: 14px;
-  padding: 14px;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.option:hover {
+<!-- Google Fonts -->
+.option:hover {<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   transform: translateY(-2px);
+  background: #fff8f8;
 }
 
 .option.selected {
   border-color: #c0392b;
   background: #fff0f0;
+}
+
+.option a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
 }
 
 button {
@@ -72,6 +33,7 @@ button {
   background: #c0392b;
   color: white;
   cursor: pointer;
+  font-weight: 600;
 }
 
 button:hover {
@@ -83,12 +45,14 @@ button:hover {
   font-weight: 600;
   text-align: center;
   display: none;
+  font-size: 1.1rem;
 }
 
 .heart {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .easter {
@@ -96,6 +60,8 @@ button:hover {
   text-align: center;
   margin-top: 14px;
   font-weight: bold;
+  font-size: 1.2rem;
+  color: #c0392b;
 }
 
 /* simple confetti */
@@ -138,20 +104,18 @@ Coffee & brunch together
 <div class="section">
 <strong>🍽️ Dinner</strong>
 <div class="options" id="dinner">
-  <div class="option">Hyde Park – 8:30 PM</div>
-  <div class="option">Mezcla – 7:45 PM</div>
-  <div class="option">Barcelona – 8:15 PM</div>
-  <div class="option">FYR – Your call</div>
+  <div class="option"><a href="https://hydeparkrestaurants.com/menu/" target="_blank">Hyde Park – 8:30 PM</a></div>
+  <div class="option"><a href="https://mezclacolumbus.com/menu" target="_blank">Mezcla – 7:45 PM</a></div>
+  <div class="option"><a href="https://barcelonacolumbus.com/menu/" target="_blank">Barcelona – 8:15 PM</a></div>
+  <div class="option"><a href="https://www.fyrshortnorth.com/menu" target="_blank">FYR – Your call</a></div>
 </div>
 </div>
 
 <div class="section">
 <strong>✨ Before / After</strong>
 <div class="options" id="activity">
-  <div class="option">Franklin Park Cocktails</div>
-  <div class="option">Makers Social</div>
-  <div class="option">Axe Throwing</div>
-  <div class="option">Candlelight Concert Show at 845PM</div>
+  <div class="option"><a href="https://franklinparkconservatory.org/" target="_blank">Franklin Park Cocktails</a></div>
+ target="_blank">Candlelight Concert Show at 8:45 PM</a></div>
 </div>
 </div>
 
@@ -213,3 +177,60 @@ document.getElementById("heart").onclick = () => {
 
 </body>
 </html>
+``
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: url('morgan.jpg') center/cover no-repeat fixed;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay {
+  background: rgba(255,245,248,0.96);
+  border-radius: 24px;
+  padding: 36px 30px;
+  max-width: 520px;
+  width: 92%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.4rem;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 12px;
+}
+
+.poem {
+  text-align: center;
+  font-style: italic;
+  margin: 18px 0 28px;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.section {
+  margin-top: 24px;
+  font-size: 1.05rem;
+}
+
+.options {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.option {
+  border: 2px solid #f2caca;
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: 0.25s;
+  background: #fff;
+}
+
