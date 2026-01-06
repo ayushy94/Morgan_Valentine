@@ -1,39 +1,367 @@
 
-import React, { useMemo, useState } from "react"; import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Input } from "@/components/ui/input"; import { Label } from "@/components/ui/label"; import { Heart, CalendarDays, Coffee, CheckCircle, Clock, Link as LinkIcon, Camera } from "lucide-react";
-// ---- Data ---- const restaurants = [ { id: "hyde-park", name: "Hyde Park Prime Steakhouse", time: "8:30 PM", menuUrl: "https://www.hydeparkrestaurants.com/downtown-columbus-menu/", placeUrl: "https://www.opentable.com/r/hyde-park-prime-steakhouse-downtown-columbus", }, { id: "mezcla", name: "Mezcla (Modern Latin)", time: "7:45 PM", menuUrl: "https://www.mezclacocina.com/", placeUrl: "https://resy.com/cities/columbus-oh/venues/mezcla", }, { id: "barcelona", name: "Barcelona Restaurant & Bar", time: "8:15 PM", menuUrl: "https://barcelonacolumbus.com/menu/", placeUrl: "https://www.opentable.com/r/barcelona-restaurant-and-bar", }, { id: "fyr", name: "FYR Short North (Hilton Columbus Downtown)", time: "Reservations available", menuUrl: "https://www.fyrshortnorth.com/", placeUrl: "https://www.opentable.com/r/fyr-short-north-columbus", }, ];
-const activities = [ { id: "conservatory", name: "Franklin Park – Cocktails at the Conservatory", time: "5:00 PM", menuUrl: "https://www.fpconservatory.org/cocktails/", placeUrl: "https://fpconservatory.org/", }, { id: "makers-social", name: "Makers Social (DIY Craft Bar)", time: "5:00 PM", menuUrl: "https://www.opentable.com/r/makers-social-the-diy-bar-columbus", placeUrl: "http://www.makerscolumbus.com/", }, { id: "dueling-axes", name: "Axe Throwing – Dueling Axes (Downtown)", time: "5:00 PM", menuUrl: "https://www.theduelingaxes.com/", placeUrl: "https://www.theduelingaxes.com/our-locations/axe-throwing-columbus/", }, { id: "candlelight", name: "Candlelight Concert (Fever)", time: "5:00 PM", menuUrl: "https://feverup.com/en/columbus-oh/candlelight", placeUrl: "https://candlelightexperience.com/columbus/", }, ];
-const morningPlan = { coffee: { name: "Fox in the Snow Café", menuUrl: "https://www.allmenus.com/oh/columbus/615305-fox-in-the-snow-cafe/menu/", placeUrl: "https://www.foxinthesnow.com/", }, brunch: { name: "Northstar Café", menuUrl: "https://www.allmenus.com/oh/columbus/448288-northstar-cafe/menu/", placeUrl: "https://www.thenorthstarcafe.com/", }, };
-// ---- Small helper components ---- function OptionCard({ option, selectedId, onSelect }: { option: { id: string; name: string; time?: string; menuUrl: string; placeUrl: string }; selectedId?: string | null; onSelect: (id: string) => void; }) { const isSelected = selectedId === option.id; return ( relative transition-all hover:shadow-xl border ${ isSelected ? "border-pink-500" : "border-transparent" } bg-white/80 backdrop-blur-md} > {option.name} {option.time && (  {option.time} 
-)} Menu / Info   Place / Reservations   ); }
-export default function ValentinesForMorgan() { const [selectedRestaurant, setSelectedRestaurant] = useState(null); const [selectedActivity, setSelectedActivity] = useState(null); const [activityTiming, setActivityTiming] = useState<"before" | "after">("before"); const [bgMode, setBgMode] = useState<"photo" | "text">("text"); const [photoUrl, setPhotoUrl] = useState("");
-const chosenRestaurant = useMemo(() => restaurants.find(r => r.id === selectedRestaurant), [selectedRestaurant]); const chosenActivity = useMemo(() => activities.find(a => a.id === selectedActivity), [selectedActivity]);
-const chosenMessage = useMemo(() => { if (!chosenRestaurant && !chosenActivity) return ""; const bits: string[] = []; if (chosenRestaurant) bits.push(chosenRestaurant.name); if (chosenActivity) bits.push(${chosenActivity.name} (${activityTiming === "before" ? "before" : "after"} dinner)); return You chose ${bits.join(" + ")} 💕; }, [chosenRestaurant, chosenActivity, activityTiming]);
-function lockItIn() { const title = "Valentine's Plan – Morgan & Aayush"; const bodyLines: string[] = []; bodyLines.push("Hey Morgan! 💖"); bodyLines.push(""); bodyLines.push("Here’s our Valentine’s Day game plan:"); if (chosenActivity) { const act = activities.find(a => a.id === selectedActivity)!; bodyLines.push(• ${activityTiming === "before" ? "Before" : "After"} dinner: ${act.name} at ${act.time}); } if (chosenRestaurant) { const r = restaurants.find(x => x.id === selectedRestaurant)!; bodyLines.push(• Dinner: ${r.name} at ${r.time}); } bodyLines.push("• Morning: Coffee at Fox in the Snow + Brunch at Northstar Café ☕🥐"); bodyLines.push(""); bodyLines.push("Can’t wait! – Aayush");
-const mailto = mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(bodyLines.join("\n"))}; window.location.href = mailto; }
-return ( min-h-screen w-full text-gray-900 ${ bgMode === "photo" ? "" : "bg-gradient-to-br from-rose-100 via-pink-100 to-fuchsia-100" }} style={bgMode === "photo" && photoUrl ? { backgroundImage: url(${photoUrl}), backgroundSize: "cover", backgroundPosition: "center" } : undefined} >  {/ Subtle overlay so text is readable over photos /}    Valentine's Day Invite 
-Morgan, be my Valentine 💌
-That’s my baby she’s iconic, Stomach growling but can’t decide what to eat, That’s ironic. 
-Pick your dinner + a fun thing {"("}before/after{")"} 
-Morning: Coffee & Brunch are included 
+import React, { useMemo, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Heart, CalendarDays, Coffee, CheckCircle, Clock, Link as LinkIcon, Camera } from "lucide-react";
 
+// ---- Data ----
+const restaurants = [
+  {
+    id: "hyde-park",
+    name: "Hyde Park Prime Steakhouse",
+    time: "8:30 PM",
+    menuUrl: "https://www.hydeparkrestaurants.com/downtown-columbus-menu/",
+    placeUrl: "https://www.opentable.com/r/hyde-park-prime-steakhouse-downtown-columbus",
+  },
+  {
+    id: "mezcla",
+    name: "Mezcla (Modern Latin)",
+    time: "7:45 PM",
+    menuUrl: "https://www.mezclacocina.com/",
+    placeUrl: "https://resy.com/cities/columbus-oh/venues/mezcla",
+  },
+  {
+    id: "barcelona",
+    name: "Barcelona Restaurant & Bar",
+    time: "8:15 PM",
+    menuUrl: "https://barcelonacolumbus.com/menu/",
+    placeUrl: "https://www.opentable.com/r/barcelona-restaurant-and-bar",
+  },
+  {
+    id: "fyr",
+    name: "FYR Short North (Hilton Columbus Downtown)",
+    time: "Reservations available",
+    menuUrl: "https://www.fyrshortnorth.com/",
+    placeUrl: "https://www.opentable.com/r/fyr-short-north-columbus",
+  },
+];
 
+const activities = [
+  {
+    id: "conservatory",
+    name: "Franklin Park – Cocktails at the Conservatory",
+    time: "5:30 PM",
+    menuUrl: "https://www.fpconservatory.org/cocktails/",
+    placeUrl: "https://fpconservatory.org/",
+  },
+  {
+    id: "makers-social",
+    name: "Makers Social (DIY Craft Bar)",
+    time: "5:00 PM",
+    menuUrl: "https://www.opentable.com/r/makers-social-the-diy-bar-columbus",
+    placeUrl: "http://www.makerscolumbus.com/",
+  },
+  {
+    id: "dueling-axes",
+    name: "Axe Throwing – Dueling Axes (Downtown)",
+    time: "5:00 PM",
+    menuUrl: "https://www.theduelingaxes.com/",
+    placeUrl: "https://www.theduelingaxes.com/our-locations/axe-throwing-columbus/",
+  },
+  {
+    id: "candlelight",
+    name: "Candlelight Concert (Fever)",
+    time: "5:00 PM",
+    menuUrl: "https://feverup.com/en/columbus-oh/candlelight",
+    placeUrl: "https://candlelightexperience.com/columbus/",
+  },
+];
 
-{/* Background mode controls */}    
-{bgMode === "photo" && (  setPhotoUrl(e.target.value)} /> 
-)} 
-{bgMode === "text" && (   {Array.from({ length: 9 }).map((_, i) => ( That’s my baby she’s iconic · Stomach growling but can’t decide what to eat · That’s ironic
-))} 
+const morningPlan = {
+  coffee: {
+    name: "Fox in the Snow Café",
+    menuUrl: "https://www.allmenus.com/oh/columbus/615305-fox-in-the-snow-cafe/menu/",
+    placeUrl: "https://www.foxinthesnow.com/",
+  },
+  brunch: {
+    name: "Northstar Café",
+    menuUrl: "https://www.allmenus.com/oh/columbus/448288-northstar-cafe/menu/",
+    placeUrl: "https://www.thenorthstarcafe.com/",
+  },
+};
 
-)}  {/* Activity timing toggle */}   
-{/* Restaurants */}   Dinner Reservations
-{restaurants.map((r) => ( ))} 
-{/* Activities */}   Fun Before/After
-{activities.map((a) => ( ))} 
-{/* Morning plan */}   Morning Coffee & Brunch
-{morningPlan.coffee.name}  Menu  Place {morningPlan.brunch.name}  Menu  Place 
-{/* Live "You chose …" banner */} {chosenMessage && (   {chosenMessage} 
+// ---- Small helper components ----
+function OptionCard({ option, selectedId, onSelect }: {
+  option: { id: string; name: string; time?: string; menuUrl: string; placeUrl: string };
+  selectedId?: string | null;
+  onSelect: (id: string) => void;
+}) {
+  const isSelected = selectedId === option.id;
+  return (
+    <Card
+      className={`relative transition-all hover:shadow-xl border ${
+        isSelected ? "border-pink-500" : "border-transparent"
+      } bg-white/80 backdrop-blur-md`}
+    >
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-gray-900">
+          <CalendarDays className="h-5 w-5 text-pink-600" />
+          {option.name}
+        </CardTitle>
+        {option.time && (
+          <div className="mt-1 flex items-center text-sm text-gray-600">
+            <Clock className="h-4 w-4 mr-1 text-gray-500" />
+            {option.time}
+          </div>
+        )}
+      </CardHeader>
+      <CardContent className="flex flex-wrap items-center gap-3">
+        <a
+          className="inline-flex items-center gap-2 text-pink-700 hover:text-pink-800 underline"
+          href={option.menuUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <LinkIcon className="h-4 w-4" /> Menu / Info
+        </a>
+        <a
+          className="inline-flex items-center gap-2 text-pink-700 hover:text-pink-800 underline"
+          href={option.placeUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <LinkIcon className="h-4 w-4" /> Place / Reservations
+        </a>
+        <Button
+          variant={isSelected ? "secondary" : "default"}
+          className={`ml-auto ${isSelected ? "bg-pink-100 text-pink-700" : "bg-pink-600 hover:bg-pink-700"}`}
+          onClick={() => onSelect(option.id)}
+        >
+          {isSelected ? (
+            <span className="inline-flex items-center gap-2"><CheckCircle className="h-4 w-4" /> Selected</span>
+          ) : (
+            <span className="inline-flex items-center gap-2"><Heart className="h-4 w-4" /> Choose this</span>
+          )}
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
 
-)} {/* Lock it in */}  {!selectedRestaurant || !selectedActivity ? ( Choose one dinner reservation and one activity first.
-) : null}  {/ Footer /}  Built by Aayush for Morgan 💕
+export default function ValentinesForMorgan() {
+  const [selectedRestaurant, setSelectedRestaurant] = useState<string | null>(null);
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
+  const [activityTiming, setActivityTiming] = useState<"before" | "after">("before");
+  const [bgMode, setBgMode] = useState<"photo" | "text">("text");
+  const [photoUrl, setPhotoUrl] = useState<string>("");
 
-); }
+  const chosenRestaurant = useMemo(() => restaurants.find(r => r.id === selectedRestaurant), [selectedRestaurant]);
+  const chosenActivity = useMemo(() => activities.find(a => a.id === selectedActivity), [selectedActivity]);
+
+  const chosenMessage = useMemo(() => {
+    if (!chosenRestaurant && !chosenActivity) return "";
+    const bits: string[] = [];
+    if (chosenRestaurant) bits.push(chosenRestaurant.name);
+    if (chosenActivity) bits.push(`${chosenActivity.name} (${activityTiming === "before" ? "before" : "after"} dinner)`);
+    return `You chose ${bits.join(" + ")} 💕`;
+  }, [chosenRestaurant, chosenActivity, activityTiming]);
+
+  function lockItIn() {
+    const title = "Valentine's Plan – Morgan & Aayush";
+    const bodyLines: string[] = [];
+    bodyLines.push("Hey Morgan! 💖");
+    bodyLines.push("");
+    bodyLines.push("Here’s our Valentine’s Day game plan:");
+    if (chosenActivity) {
+      const act = activities.find(a => a.id === selectedActivity)!;
+      bodyLines.push(`• ${activityTiming === "before" ? "Before" : "After"} dinner: ${act.name} at ${act.time}`);
+    }
+    if (chosenRestaurant) {
+      const r = restaurants.find(x => x.id === selectedRestaurant)!;
+      bodyLines.push(`• Dinner: ${r.name} at ${r.time}`);
+    }
+    bodyLines.push("• Morning: Coffee at Fox in the Snow + Brunch at Northstar Café ☕🥐");
+    bodyLines.push("");
+    bodyLines.push("Can’t wait! – Aayush");
+
+    const mailto = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(bodyLines.join("
+"))}`;
+    window.location.href = mailto;
+  }
+
+  return (
+    <div
+      className={`min-h-screen w-full text-gray-900 ${
+        bgMode === "photo"
+          ? ""
+          : "bg-gradient-to-br from-rose-100 via-pink-100 to-fuchsia-100"
+      }`}
+      style={bgMode === "photo" && photoUrl ? { backgroundImage: `url(${photoUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+    >
+      <div className="relative">
+        {/* Subtle overlay so text is readable over photos */}
+        <div className="absolute inset-0 bg-white/40" />
+        <header className="relative px-6 py-10 md:px-12 md:py-16">
+          <div className="flex items-center gap-3 text-pink-700">
+            <Heart className="h-6 w-6" />
+            <span className="uppercase tracking-widest text-sm font-semibold">Valentine's Day Invite</span>
+          </div>
+          <h1 className="mt-2 text-3xl md:text-5xl font-extrabold text-gray-900">Morgan, be my Valentine 💌</h1>
+          <p className="mt-3 max-w-3xl text-base md:text-lg text-gray-700">
+            That’s my baby she’s iconic, Stomach growling but can’t decide what to eat, That’s ironic.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-md rounded-2xl px-3 py-2 shadow">
+              <CalendarDays className="h-4 w-4 text-pink-600" />
+              <span className="text-sm">Pick your dinner + a fun thing {"("}before/after{")"}</span>
+            </div>
+            <div className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-md rounded-2xl px-3 py-2 shadow">
+              <Coffee className="h-4 w-4 text-pink-600" />
+              <span className="text-sm">Morning: Coffee & Brunch are included</span>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <main className="relative z-10 px-6 md:px-12 pb-24">
+        {/* Background mode controls */}
+        <section className="mb-6">
+          <Card className="bg-white/80 backdrop-blur-md">
+            <CardContent className="pt-6">
+              <div className="flex flex-wrap items-end gap-3">
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm">Background style:</Label>
+                  <Button
+                    variant={bgMode === "text" ? "default" : "secondary"}
+                    className={bgMode === "text" ? "bg-pink-600 hover:bg-pink-700" : "bg-pink-100 text-pink-700"}
+                    onClick={() => setBgMode("text")}
+                  >
+                    Inside-joke text
+                  </Button>
+                  <Button
+                    variant={bgMode === "photo" ? "default" : "secondary"}
+                    className={bgMode === "photo" ? "bg-pink-600 hover:bg-pink-700" : "bg-pink-100 text-pink-700"}
+                    onClick={() => setBgMode("photo")}
+                  >
+                    Photo background
+                  </Button>
+                </div>
+                {bgMode === "photo" && (
+                  <div className="flex items-center gap-2 grow">
+                    <Camera className="h-4 w-4 text-gray-700" />
+                    <Input
+                      placeholder="Paste a photo URL (e.g., an uploaded image or an album link)"
+                      value={photoUrl}
+                      onChange={(e) => setPhotoUrl(e.target.value)}
+                    />
+                  </div>
+                )}
+              </div>
+              {bgMode === "text" && (
+                <div className="mt-4 text-xs text-gray-600">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <div key={i} className="opacity-70">That’s my baby she’s iconic · Stomach growling but can’t decide what to eat · That’s ironic</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Activity timing toggle */}
+        <section className="mb-8">
+          <Card className="bg-white/80 backdrop-blur-md">
+            <CardContent className="pt-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <Label className="text-sm">Do the activity:</Label>
+                <Button
+                  variant={activityTiming === "before" ? "default" : "secondary"}
+                  className={activityTiming === "before" ? "bg-pink-600 hover:bg-pink-700" : "bg-pink-100 text-pink-700"}
+                  onClick={() => setActivityTiming("before")}
+                >
+                  Before dinner
+                </Button>
+                <Button
+                  variant={activityTiming === "after" ? "default" : "secondary"}
+                  className={activityTiming === "after" ? "bg-pink-600 hover:bg-pink-700" : "bg-pink-100 text-pink-700"}
+                  onClick={() => setActivityTiming("after")}
+                >
+                  After dinner
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Restaurants */}
+        <section className="mb-10">
+          <h2 className="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2"><CalendarDays className="h-5 w-5 text-pink-700" /> Dinner Reservations</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {restaurants.map((r) => (
+              <OptionCard key={r.id} option={r} selectedId={selectedRestaurant} onSelect={setSelectedRestaurant} />
+            ))}
+          </div>
+        </section>
+
+        {/* Activities */}
+        <section className="mb-10">
+          <h2 className="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2"><CalendarDays className="h-5 w-5 text-pink-700" /> Fun Before/After</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {activities.map((a) => (
+              <OptionCard key={a.id} option={a} selectedId={selectedActivity} onSelect={setSelectedActivity} />
+            ))}
+          </div>
+        </section>
+
+        {/* Morning plan */}
+        <section className="mb-10">
+          <h2 className="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2"><Coffee className="h-5 w-5 text-pink-700" /> Morning Coffee & Brunch</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="bg-white/80 backdrop-blur-md">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Coffee className="h-5 w-5 text-pink-600" /> {morningPlan.coffee.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center gap-3">
+                <a className="inline-flex items-center gap-2 text-pink-700 hover:text-pink-800 underline" href={morningPlan.coffee.menuUrl} target="_blank" rel="noreferrer"><LinkIcon className="h-4 w-4" /> Menu</a>
+                <a className="inline-flex itemsCenter gap-2 text-pink-700 hover:text-pink-800 underline" href={morningPlan.coffee.placeUrl} target="_blank" rel="noreferrer"><LinkIcon className="h-4 w-4" /> Place</a>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/80 backdrop-blur-md">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Coffee className="h-5 w-5 text-pink-600" /> {morningPlan.brunch.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center gap-3">
+                <a className="inline-flex items-center gap-2 text-pink-700 hover:text-pink-800 underline" href={morningPlan.brunch.menuUrl} target="_blank" rel="noreferrer"><LinkIcon className="h-4 w-4" /> Menu</a>
+                <a className="inline-flex items-center gap-2 text-pink-700 hover:text-pink-800 underline" href={morningPlan.brunch.placeUrl} target="_blank" rel="noreferrer"><LinkIcon className="h-4 w-4" /> Place</a>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Live "You chose …" banner */}
+        {chosenMessage && (
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 bg-pink-600 text-white rounded-2xl px-4 py-3 shadow-lg">
+              <Heart className="h-5 w-5" />
+              <span className="font-semibold">{chosenMessage}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Lock it in */}
+        <section className="">
+          <Button
+            className="w-full md:w-auto bg-pink-700 hover:bg-pink-800 text-white text-base md:text-lg rounded-2xl px-6 py-6 shadow-md"
+            onClick={lockItIn}
+            disabled={!selectedRestaurant || !selectedActivity}
+            title={!selectedRestaurant || !selectedActivity ? "Choose dinner + a before/after activity to enable" : "Send the plan"}
+          >
+            <span className="inline-flex items-center gap-2"><CheckCircle className="h-6 w-6" /> Lock it in</span>
+          </Button>
+          {!selectedRestaurant || !selectedActivity ? (
+            <p className="mt-3 text-sm text-gray-600">Choose one dinner reservation and one activity first.</p>
+          ) : null}
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="relative z-10 px-6 md:px-12 py-12 text-sm text-gray-600">
+        <p>Built by Aayush for Morgan 💕</p>
+      </footer>
+    </div>
+  );
+}
